@@ -98,7 +98,7 @@ while True:
             path = ""
             sendMessage = False
             if( len(targetProject) == 2):
-                Serial.print(targetProject)
+                print(targetProject)
                 if( targetProject == "00" ):
                     path = videoPaths(0)
                     sendMessage = True
