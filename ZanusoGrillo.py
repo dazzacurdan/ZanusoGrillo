@@ -81,36 +81,36 @@ while True:
 
     reading = GPIO.input(PIN_INPUT);
 
-    if ((millis() - lastStateChangeTime) > dialHasFinishedRotatingAfterMs)
+    if ((millis() - lastStateChangeTime) > dialHasFinishedRotatingAfterMs):
         # the dial isn't being dialed, or has just finished being dialed.
-        if (needToPrint)
+        if (needToPrint):
             # if it's only just finished being dialed, we need to send the number down the serial
             # line and reset the count. We mod the count by 10 because '0' will send 10 pulses.
             targetProject += String(count % 10);
             #Serial.print(count % 10, DEC);
 
-            if(targetProject.length() == 2)
+            if(targetProject.length() == 2):
                 Serial.print(targetProject);
-                if( targetProject == "00" )
+                if( targetProject == "00" ):
                     path = videoPaths(i)
                     print( "/play " + path[0] )
-                if( targetProject == "01" )
+                if( targetProject == "01" ):
                     #Keyboard.press('w');
-                if( targetProject == "02" )
+                if( targetProject == "02" ):
                     #Keyboard.press('e');
-                if( targetProject == "03" )
+                if( targetProject == "03" ):
                     #Keyboard.press('r');
-                if( targetProject == "04" )
+                if( targetProject == "04" ):
                     #Keyboard.press('t');
-                if( targetProject == "05" )
+                if( targetProject == "05" ):
                     #Keyboard.press('a');
-                if( targetProject == "06" )
+                if( targetProject == "06" ):
                     #Keyboard.press('s');
-                if( targetProject == "07" )
+                if( targetProject == "07" ):
                     #Keyboard.press('d');
-                if( targetProject == "08" )
+                if( targetProject == "08" ):
                     #Keyboard.press('f');
-                if( targetProject == "09" )
+                if( targetProject == "09" ):
                     #Keyboard.press('g');
                 #delay(10);
                 #Keyboard.releaseAll();
@@ -123,15 +123,15 @@ while True:
             count = 0;
             cleared = 0;
 
-    if (reading != lastState)
+    if (reading != lastState):
         lastStateChangeTime = millis();
 
-    if ((millis() - lastStateChangeTime) > debounceDelay)
+    if ((millis() - lastStateChangeTime) > debounceDelay):
         #debounce - this happens once it's stablized
-        if (reading != trueState)
+        if (reading != trueState):
             # this means that the switch has either just gone from closed->open or vice versa.
             trueState = reading;
-            if (trueState == HIGH)
+            if (trueState == HIGH):
                 # increment the count of pulses if it's gone high.
                 count++; 
                 needToPrint = 1; # we'll need to print this number (once the dial has finished rotating)
