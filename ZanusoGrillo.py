@@ -95,7 +95,7 @@ while True:
             
             targetProject += str(count%10)
             #Serial.print(count % 10, DEC);
-
+            path = ""
             if( len(targetProject) == 2):
                 Serial.print(targetProject)
                 if( targetProject == "00" ):
