@@ -96,7 +96,7 @@ while True:
             targetProject += str(count%10)
             #Serial.print(count % 10, DEC);
 
-            if(targetProject.length() == 2):
+            if( len(targetProject) == 2):
                 Serial.print(targetProject)
                 if( targetProject == "00" ):
                     path = videoPaths(i)
