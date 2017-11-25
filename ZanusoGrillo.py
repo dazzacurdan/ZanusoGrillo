@@ -56,19 +56,19 @@ def event_lock_holder(lock,delay):
 
 def videoPaths(x):
     return {
-       "00": [globalVideoPath+"/"+x+".mp4", 60 ],
-       "01": [globalVideoPath+"/"+x+".mp4", 20 ],
-       "02": [globalVideoPath+"/"+x+".mp4", 60 ],
-       "03": [globalVideoPath+"/"+x+".mp4", 20 ],
-       "04": [globalVideoPath+"/"+x+".mp4", 60 ],
-       "05": [globalVideoPath+"/"+x+".mp4", 20 ],
-       "06": [globalVideoPath+"/"+x+".mp4", 60 ],
-       "07": [globalVideoPath+"/"+x+".mp4", 20 ],
-       "08": [globalVideoPath+"/"+x+".mp4", 60 ],
-       "09": [globalVideoPath+"/"+x+".mp4", 20 ],
-       "10": [globalVideoPath+"/"+x+".mp4", 60 ],
-       "11": [globalVideoPath+"/"+x+".mp4", 20 ]
-    }.get(x, [globalVideoPath+"/"+x+".mp4", 10 ])    # 9 is default if x not found
+       0: [globalVideoPath+"/00.mp4", 60 ],
+       1: [globalVideoPath+"/01.mp4", 20 ],
+       2: [globalVideoPath+"/02.mp4", 60 ],
+       3: [globalVideoPath+"/03.mp4", 20 ],
+       4: [globalVideoPath+"/04.mp4", 60 ],
+       5: [globalVideoPath+"/05.mp4", 20 ],
+       6: [globalVideoPath+"/06.mp4", 60 ],
+       7: [globalVideoPath+"/07.mp4", 20 ],
+       8: [globalVideoPath+"/08.mp4", 60 ],
+       9: [globalVideoPath+"/09.mp4", 20 ],
+       10: [globalVideoPath+"/10.mp4", 60 ],
+       11: [globalVideoPath+"/11.mp4", 20 ]
+    }.get(x, [globalVideoPath+"/00.mp4", 10 ])    # 9 is default if x not found
 
 print('Zanuso - GRILLO HACKING')
 parser = argparse.ArgumentParser()
@@ -99,10 +99,11 @@ while True:
             if( len(targetProject) == 2):
                 Serial.print(targetProject)
                 if( targetProject == "00" ):
-                    path = videoPaths(i)
-                    print( "/play " + path[0] )
+                    path = videoPaths(0)
+                if( targetProject == "01" ):
+                    path = videoPaths(1)    
                 targetProject = ""
-            
+            print( "/play " + path[0] )
             client.send_message("/play", path[0] )
             threading.Thread(target=event_lock_holder, args=(lock,path[1]), name='eventLockHolder').start()
 
