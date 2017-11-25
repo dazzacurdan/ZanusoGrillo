@@ -96,16 +96,21 @@ while True:
             targetProject += str(count%10)
             #Serial.print(count % 10, DEC);
             path = ""
+            sendMessage = False
             if( len(targetProject) == 2):
                 Serial.print(targetProject)
                 if( targetProject == "00" ):
                     path = videoPaths(0)
+                    sendMessage = True
                 if( targetProject == "01" ):
-                    path = videoPaths(1)    
+                    path = videoPaths(1)
+                    sendMessage = True    
                 targetProject = ""
-            print( "/play " + path[0] )
-            client.send_message("/play", path[0] )
-            threading.Thread(target=event_lock_holder, args=(lock,path[1]), name='eventLockHolder').start()
+            
+            if sendMessage:
+                print( "/play " + path[0] )
+                client.send_message("/play", path[0] )
+                threading.Thread(target=event_lock_holder, args=(lock,path[1]), name='eventLockHolder').start()
 
             needToPrint = 0
             count = 0
