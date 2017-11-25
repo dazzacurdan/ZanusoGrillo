@@ -1,4 +1,7 @@
+import argparse
+import threading
 import RPi.GPIO as GPIO, time
+from datetime import datetime
 
 GPIO.setmode(GPIO.BCM)
 
@@ -9,20 +12,23 @@ globalVideoPath = "/home/pi/media"
 events = 0;
 lock = threading.Lock()
 
-needToPrint = 0;
-count;
-PIN_INPUT = 2;
+needToPrint = 0
+count = 0
+PIN_INPUT = 2
 GPIO.setup(PIN_INPUT, GPIO.IN)
 
-lastState = LOW;
-trueState = LOW;
-lastStateChangeTime = 0;
-cleared = 0;
+lastState = GPIO.LOW
+trueState = GPIO.LOW
+lastStateChangeTime = 0
+cleared = 0
 
-dialHasFinishedRotatingAfterMs = 100;
-debounceDelay = 10;
+dialHasFinishedRotatingAfterMs = 100
+debounceDelay = 10
 
-targetProject;
+targetProject = ""
+
+def millis():
+	return datetime.now().microsecond
 
 def event_lock_holder(lock,delay):
     print('Starting')
@@ -86,7 +92,8 @@ while True:
         if (needToPrint):
             # if it's only just finished being dialed, we need to send the number down the serial
             # line and reset the count. We mod the count by 10 because '0' will send 10 pulses.
-            targetProject += String(count % 10)
+
+		targetProject += str(count%10)
             #Serial.print(count % 10, DEC);
 
             if(targetProject.length() == 2):
@@ -94,26 +101,6 @@ while True:
                 if( targetProject == "00" ):
                     path = videoPaths(i)
                     print( "/play " + path[0] )
-                if( targetProject == "01" ):
-                    #Keyboard.press('w');
-                if( targetProject == "02" ):
-                    #Keyboard.press('e');
-                if( targetProject == "03" ):
-                    #Keyboard.press('r');
-                if( targetProject == "04" ):
-                    #Keyboard.press('t');
-                if( targetProject == "05" ):
-                    #Keyboard.press('a');
-                if( targetProject == "06" ):
-                    #Keyboard.press('s');
-                if( targetProject == "07" ):
-                    #Keyboard.press('d');
-                if( targetProject == "08" ):
-                    #Keyboard.press('f');
-                if( targetProject == "09" ):
-                    #Keyboard.press('g');
-                #delay(10);
-                #Keyboard.releaseAll();
                 targetProject = ""
             
             client.send_message("/play", path[0] )
@@ -131,8 +118,8 @@ while True:
         if (reading != trueState):
             # this means that the switch has either just gone from closed->open or vice versa.
             trueState = reading
-            if (trueState == HIGH):
+            if (trueState == GPIO.HIGH):
                 # increment the count of pulses if it's gone high.
-                count++; 
+                count = count + 1; 
                 needToPrint = 1; # we'll need to print this number (once the dial has finished rotating)
     lastState = reading
