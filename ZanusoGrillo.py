@@ -92,8 +92,8 @@ while True:
         if (needToPrint):
             # if it's only just finished being dialed, we need to send the number down the serial
             # line and reset the count. We mod the count by 10 because '0' will send 10 pulses.
-
-		    targetProject += str(count%10)
+            
+            targetProject += str(count%10)
             #Serial.print(count % 10, DEC);
 
             if(targetProject.length() == 2):
