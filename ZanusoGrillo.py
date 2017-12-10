@@ -31,7 +31,7 @@ def millis():
 	return datetime.now().microsecond
 
 def event_lock_holder(lock,delay):
-    print('Starting')
+    print('Lock.Starting')
     print('events is: {0}'.format(events))
     print('delay is: {0}'.format(delay))    
     
@@ -93,18 +93,36 @@ while True:
             # if it's only just finished being dialed, we need to send the number down the serial
             # line and reset the count. We mod the count by 10 because '0' will send 10 pulses.
             
-            targetProject += str(count%10)
+            targetProject += str((count%10)-1)
             #Serial.print(count % 10, DEC);
             path = ""
             sendMessage = False
             if( len(targetProject) == 2):
                 print(targetProject)
-                if( targetProject == "56" ):
+                if( targetProject == "12" ):
                     path = videoPaths(0)
                     sendMessage = True
-                if( targetProject == "67" ):
+                if( targetProject == "23" ):
                     path = videoPaths(1)
+                    sendMessage = True
+                if( targetProject == "34" ):
+                    path = videoPaths(2)
+                    sendMessage = True
+                if( targetProject == "45" ):
+                    path = videoPaths(3)
+                    sendMessage = True
+                if( targetProject == "56" ):
+                    path = videoPaths(4)
+                    sendMessage = True
+                if( targetProject == "67" ):
+                    path = videoPaths(5)
+                    sendMessage = True
+                if( targetProject == "78" ):
+                    path = videoPaths(6)
                     sendMessage = True    
+                if( targetProject == "89" ):
+                    path = videoPaths(7)
+                    sendMessage = True
                 targetProject = ""
             
             if sendMessage:
