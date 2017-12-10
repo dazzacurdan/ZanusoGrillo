@@ -22,8 +22,8 @@ trueState = GPIO.LOW
 lastStateChangeTime = 0
 cleared = 0
 
-dialHasFinishedRotatingAfterMs = 100
-debounceDelay = 10
+dialHasFinishedRotatingAfterMs = 100000 #100 in millisecond 
+debounceDelay = 10000 # 10 in millisecond
 
 targetProject = ""
 
@@ -99,10 +99,10 @@ while True:
             sendMessage = False
             if( len(targetProject) == 2):
                 print(targetProject)
-                if( targetProject == "00" ):
+                if( targetProject == "56" ):
                     path = videoPaths(0)
                     sendMessage = True
-                if( targetProject == "01" ):
+                if( targetProject == "67" ):
                     path = videoPaths(1)
                     sendMessage = True    
                 targetProject = ""
