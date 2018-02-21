@@ -2,6 +2,7 @@ import argparse
 import threading
 import RPi.GPIO as GPIO, time
 from datetime import datetime
+from pygame import mixer
 
 GPIO.setmode(GPIO.BCM)
 
@@ -15,7 +16,10 @@ lock = threading.Lock()
 needToPrint = 0
 count = 0
 PIN_INPUT = 2
+BUTTON_PIN = 3
+TEL_NUM_LENGTH = 8
 GPIO.setup(PIN_INPUT, GPIO.IN)
+GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 lastState = GPIO.LOW
 trueState = GPIO.LOW
@@ -48,31 +52,29 @@ def event_lock_holder(lock,delay):
     time.sleep(delay)
         
     if events == th_id :
-        print("/play "+globalVideoPath+"/LOOP-B-made.mp4")
-        client.send_message("/play", globalVideoPath+"/LOOP-B-made.mp4" )
+        print("/play "+globalVideoPath+"/Loop.mp4")
+        client.send_message("/play", globalVideoPath+"/LOOP-B-Zanuso.mp4" )
     else:
         print('terminated {0}'.format(th_id))
     return
 
 def videoPaths(x):
     return {
-       0: [globalVideoPath+"/00.mp4", 60 ],
-       1: [globalVideoPath+"/01.mp4", 20 ],
-       2: [globalVideoPath+"/02.mp4", 60 ],
-       3: [globalVideoPath+"/03.mp4", 20 ],
-       4: [globalVideoPath+"/04.mp4", 60 ],
-       5: [globalVideoPath+"/05.mp4", 20 ],
-       6: [globalVideoPath+"/06.mp4", 60 ],
-       7: [globalVideoPath+"/07.mp4", 20 ],
-       8: [globalVideoPath+"/08.mp4", 60 ],
-       9: [globalVideoPath+"/09.mp4", 20 ],
-       10: [globalVideoPath+"/10.mp4", 60 ],
-       11: [globalVideoPath+"/11.mp4", 20 ]
+       0: [globalVideoPath+"/01-ZANUSO.mp4", 59 ],
+       1: [globalVideoPath+"/02-ZANUSO.mp4", 53 ],
+       2: [globalVideoPath+"/03-ZANUSO.mp4", 60 ],
+       3: [globalVideoPath+"/04-ZANUSO.mp4", 67 ],
+       4: [globalVideoPath+"/05-ZANUSO.mp4", 67 ],
+       5: [globalVideoPath+"/06-ZANUSO.mp4", 80 ],
+       6: [globalVideoPath+"/07-ZANUSO.mp4", 87 ],
+       7: [globalVideoPath+"/08-ZANUSO.mp4", 59 ],
+       8: [globalVideoPath+"/09-ZANUSO.mp4", 86 ],
+       9: [globalVideoPath+"/10-ZANUSO.mp4", 52 ],
     }.get(x, [globalVideoPath+"/00.mp4", 10 ])    # 9 is default if x not found
 
 print('Zanuso - GRILLO HACKING')
 parser = argparse.ArgumentParser()
-parser.add_argument("--ip", default="127.0.0.1",
+parser.add_argument("--ip", default="192.168.1.3",
     help="The ip of the OSC server")
 parser.add_argument("--port", type=int, default=9000,
     help="The port the OSC server is listening on")
@@ -80,10 +82,26 @@ args = parser.parse_args()
 
 client = udp_client.SimpleUDPClient(args.ip, args.port)
 
+parser_pc = argparse.ArgumentParser()
+parser_pc.add_argument("--ip", default="192.168.1.79",
+    help="The ip of the OSC server")
+parser_pc.add_argument("--port", type=int, default=15000,
+    help="The port the OSC server is listening on")
+args_pc = parser_pc.parse_args()
+
+client_pc = udp_client.SimpleUDPClient(args_pc.ip, args_pc.port)
+
+mixer.init()
+mixer.music.load("lineaCaduta.mp3")
+
 # Main loop to print a message every time a pin is touched.
 print('Press Ctrl-C to quit.')
 
 while True:
+    if GPIO.input(BUTTON_PIN) == False:
+        print("reset number %s" % (targetProject))
+        targetProject=""
+        time.sleep(0.2)
 
     reading = GPIO.input(PIN_INPUT)
 
@@ -93,42 +111,67 @@ while True:
             # if it's only just finished being dialed, we need to send the number down the serial
             # line and reset the count. We mod the count by 10 because '0' will send 10 pulses.
             
-            targetProject += str((count%10)-1)
-            #Serial.print(count % 10, DEC);
+            number = (count%10)-1
+            if(number < 0):
+                number = 9
+            targetProject += str(number)
+            print("Count is %d ,Target project is %s" % (count, targetProject))
             path = ""
             sendMessage = False
-            if( len(targetProject) == 2):
+            number = 0
+            if( len(targetProject) == TEL_NUM_LENGTH):
                 print(targetProject)
-                if( targetProject == "12" ):
+                if( targetProject.find("11") > 0):
                     path = videoPaths(0)
                     sendMessage = True
-                if( targetProject == "23" ):
+                    number = 81#Q
+                if( targetProject.find("54") > 0):
                     path = videoPaths(1)
                     sendMessage = True
-                if( targetProject == "34" ):
+                    number = 87#W
+                if( targetProject.find("65") > 0):
                     path = videoPaths(2)
                     sendMessage = True
-                if( targetProject == "45" ):
+                    number = 69#E
+                if( targetProject.find("76") > 0):
                     path = videoPaths(3)
                     sendMessage = True
-                if( targetProject == "56" ):
+                    number = 82#R
+                if( targetProject.find("12") > 0):
                     path = videoPaths(4)
                     sendMessage = True
-                if( targetProject == "67" ):
+                    number = 84#T
+                if( targetProject.find("53") > 0):
                     path = videoPaths(5)
                     sendMessage = True
-                if( targetProject == "78" ):
+                    number = 89#Y
+                if( targetProject.find("25") > 0):
                     path = videoPaths(6)
-                    sendMessage = True    
-                if( targetProject == "89" ):
+                    sendMessage = True
+                    number = 85#U    
+                if( targetProject.find("21") > 0):
                     path = videoPaths(7)
                     sendMessage = True
+                    number = 73#I
+                if( targetProject.find("15") > 0):
+                    path = videoPaths(8)
+                    sendMessage = True
+                    number = 65#A
+                if( targetProject.find("34") > 0):
+                    path = videoPaths(9)
+                    sendMessage = True
+                    number = 83#S
+
+                print("TargetProject reset %s" % (targetProject))  
                 targetProject = ""
-            
-            if sendMessage:
-                print( "/play " + path[0] )
-                client.send_message("/play", path[0] )
-                threading.Thread(target=event_lock_holder, args=(lock,path[1]), name='eventLockHolder').start()
+
+                if sendMessage:
+                    print( "/play " + path[0] )
+                    client.send_message("/play", path[0] )
+                    client_pc.send_message("/play", number)
+                    threading.Thread(target=event_lock_holder, args=(lock,path[1]), name='eventLockHolder').start()
+                else:
+                     mixer.music.play()
 
             needToPrint = 0
             count = 0

@@ -33,11 +33,12 @@ void loop()
             // if it's only just finished being dialed, we need to send the number down the serial
             // line and reset the count. We mod the count by 10 because '0' will send 10 pulses.
             targetProject += String(count % 10);
-            Serial.print(count % 10, DEC);
+            //Serial.print(count % 10, DEC);
 
             if(targetProject.length() == 2)
             {
-                Serial.print(targetProject);
+                Serial.print("Project is: ");
+                Serial.println(targetProject);
                 if( targetProject == "00" )
                 {
                     //Keyboard.press('q');
@@ -91,6 +92,8 @@ void loop()
 
     if (reading != lastState) {
         lastStateChangeTime = millis();
+        Serial.print("lastStateChangeTime:");
+        Serial.println(lastStateChangeTime);
     }
 
     if ((millis() - lastStateChangeTime) > debounceDelay) {
