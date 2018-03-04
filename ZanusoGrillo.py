@@ -10,7 +10,6 @@ from pythonosc import osc_message_builder
 from pythonosc import udp_client
 
 globalVideoPath = "/home/pi/media"
-events = 0
 lock = threading.Lock()
 
 needToPrint = 0
@@ -39,7 +38,6 @@ def event_lock_holder(lock,delay):
     print('events is: {0}'.format(events))
     print('delay is: {0}'.format(delay))    
     
-    global events
     th_id = 0
     lock.acquire()
     try:
@@ -91,6 +89,9 @@ args_pc = parser_pc.parse_args()
 
 client_pc = udp_client.SimpleUDPClient(args_pc.ip, args_pc.port)
 
+global events
+events = 0
+
 mixer.init()
 mixer.music.load("lineaCaduta.mp3")
 
@@ -121,43 +122,43 @@ while True:
             number = 0
             if( len(targetProject) == TEL_NUM_LENGTH):
                 print(targetProject)
-                if( targetProject.find("11") > 0):
+                if( targetProject.find("11") > 5):
                     path = videoPaths(0)
                     sendMessage = True
                     number = 81#Q
-                if( targetProject.find("54") > 0):
+                if( targetProject.find("54") > 5):
                     path = videoPaths(1)
                     sendMessage = True
                     number = 87#W
-                if( targetProject.find("65") > 0):
+                if( targetProject.find("65") > 5):
                     path = videoPaths(2)
                     sendMessage = True
                     number = 69#E
-                if( targetProject.find("76") > 0):
+                if( targetProject.find("76") > 5):
                     path = videoPaths(3)
                     sendMessage = True
                     number = 82#R
-                if( targetProject.find("12") > 0):
+                if( targetProject.find("12") > 5):
                     path = videoPaths(4)
                     sendMessage = True
                     number = 84#T
-                if( targetProject.find("53") > 0):
+                if( targetProject.find("53") > 5):
                     path = videoPaths(5)
                     sendMessage = True
                     number = 89#Y
-                if( targetProject.find("25") > 0):
+                if( targetProject.find("25") > 5):
                     path = videoPaths(6)
                     sendMessage = True
                     number = 85#U    
-                if( targetProject.find("21") > 0):
+                if( targetProject.find("21") > 5):
                     path = videoPaths(7)
                     sendMessage = True
                     number = 73#I
-                if( targetProject.find("15") > 0):
+                if( targetProject.find("15") > 5):
                     path = videoPaths(8)
                     sendMessage = True
                     number = 65#A
-                if( targetProject.find("34") > 0):
+                if( targetProject.find("34") > 5):
                     path = videoPaths(9)
                     sendMessage = True
                     number = 83#S
